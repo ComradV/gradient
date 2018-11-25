@@ -1,0 +1,8 @@
+#container{
+    display: flex;
+}
+
+div canvas {
+    width: 7px;
+    margin-right: 3px;
+}
