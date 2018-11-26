@@ -68,7 +68,7 @@ function redrawCanvas(marks) {
     let squareSize = height / resolution;
     let keys = Object.getOwnPropertyNames(marks);
     for (let i = 0; i < keys.length; i++) {
-        let values = getSaturationValues(marks[keys[i]], squareSize, resolution)
+        let values = getSaturationValues(marks[keys[i]], squareSize)
         var canvas = document.getElementById("canvas" + markSettings[keys[i]].position);
         var ctx = canvas.getContext("2d");
         ctx.lineWidth = 0;
@@ -90,29 +90,30 @@ function drawSquare(ctx, x, y, width, size, color, saturation) {
     ctx.stroke();
 }
 
-function getSaturationValues(marks, squareSize, numSquares) {
-    let result = new Array(numSquares).fill(0);
+function getSaturationValues(marks, squareSize) {
+    let result = new Array(resolution).fill(0);
+    let height = document.getElementById('textElem').offsetHeight;
     for (let i = 0; i < marks.length; i++) {
-        putResult(result, Math.floor(marks[i] / squareSize), numSquares)
+        putResult(result, Math.floor(marks[i] / height * resolution))
     }
     return result;
 }
 
-function putResult(result, pointToPut, numSquares) {
-    let profile = getProfile(pointToPut, numSquares);
+function putResult(result, pointToPut) {
+    let profile = getProfile(pointToPut);
     for (let i = 0; i < result.length; i++) {
         result[i] = Math.max(result[i], profile[i]);
     }
 }
 
-function getProfile(point, numSquares) {
-    let result = new Array(numSquares).fill(0);
+function getProfile(point) {
+    let result = new Array(resolution).fill(0);
     for (let i = 0; i < limit; i++) {
         let val = Math.exp(-i * i / alpha)
         let ind1 = point - i;
         if (ind1 >= 0) { result[ind1] = val }
         let ind2 = point + i;
-        if (ind2 < numSquares) { result[ind2] = val }
+        if (ind2 < resolution) { result[ind2] = val }
     }
     return result;
 }
